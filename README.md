@@ -172,10 +172,6 @@ vim /etc/telegraf/telegraf.conf
 [[inputs.net]]
 
 
-
-## HTTP basic auth:
-     username = "telegraf"
-     password = "telegraf"
 ```
 
 
