@@ -1,6 +1,6 @@
 ## InfluxDB and Grafana:
 
-### Overview of the Stack
+### Overview of the Stack:
 - **InfluxDB**: Time-series database for storing metrics.
 - **Telegraf** (optional but recommended): Metric collection agent. Agent that collects metrics from server and writes to InfluxDB.
 - **Grafana**: Visualization platform to display metrics.
@@ -115,11 +115,39 @@ Visit `http://<server_ip>:8086` and follow the web-based onboarding:
 
 
 
+#### Verify Data Influx:
+
+
+```
+influx org list --token <YOUR_API_TOKEN>
+```
+
+
+```
+influx bucket list --org technbd --token <YOUR_API_TOKEN>
+```
+
+
+```
+influx query 'from(bucket: "<BUCKET_NAME>") |> range(start: -5m)' --org <YOUR_ORG_NAME> --token <YOUR_API_TOKEN>
+```
+
+
+
+
+
+
 ### Install Telegraf:
+
+The **Telegraf agent** is a lightweight, plugin-driven server agent used to collect, process, and send metrics to outputs like **InfluxDB**, **Prometheus**, and many others.
+
+
+_Install telegraf agent to each server:_
 
 ```
 yum install -y telegraf
 ```
+
 
 
 ```
@@ -182,22 +210,8 @@ systemctl status telegraf
 
 
 
-
-#### Verify Data Influx:
-
-
 ```
-influx org list --token <YOUR_API_TOKEN>
-```
-
-
-```
-influx bucket list --org technbd --token <YOUR_API_TOKEN>
-```
-
-
-```
-influx query 'from(bucket: "<BUCKET_NAME>") |> range(start: -5m)' --org <YOUR_ORG_NAME> --token <YOUR_API_TOKEN>
+ls /etc/telegraf/telegraf.d/
 ```
 
 
@@ -307,6 +321,12 @@ Visit `http://<server_ip>:8086` and follow the web-based onboarding:
 1. Go to InfluxDB Web UI: `Home` - click  `Load Data` - `Sources` - search: [ ]
 
 
+2. Create Token: `Home` - click  `Load Data` - `API Tokens` - click `Generate API Token` - select `Custom API Token`:
+    - Buckets:
+        - select your bucket: `telegraf`
+        - click `Generate`
+
+
 
 
 
@@ -318,9 +338,9 @@ Visit `http://<server_ip>:8086` and follow the web-based onboarding:
     - HTTP:
         - URL: `http://192.168.10.193:8086`
     - Auth:
-        - Basic auth: [✔]
+        - Basic auth: [ ] (-> Uncheck it)
     - Basic Auth Details:
-        - User:
+        - User: N/A
         - Password: 
     - InfluxDB Details:
         - Organization: `technbd`
