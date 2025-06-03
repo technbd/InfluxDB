@@ -215,6 +215,106 @@ ls /etc/telegraf/telegraf.d/
 ```
 
 
+#### Custom `.conf` File: 
+
+
+```
+cd /etc/telegraf/telegraf.d/
+```
+
+
+```
+vim telegraf-custom.conf
+
+
+### Global Agent Configuration
+[global_tags]
+[agent]
+  interval = "10s"
+  round_interval = true
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  skip_processors_after_aggregators = false
+
+  ## Override default hostname, if empty use os.Hostname():
+  hostname = "node3"
+
+### OUTPUT PLUGINS:
+[[outputs.influxdb_v2]]
+  urls = ["http://127.0.0.1:8086"]
+  token = "your_token_here"
+  organization = "technbd"
+  bucket = "telegraf"
+
+
+### INPUT PLUGINS:
+[[inputs.cpu]]
+  percpu = true
+  totalcpu = true
+  collect_cpu_time = false
+  report_active = false
+  core_tags = false
+
+[[inputs.disk]]
+  ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+
+[[inputs.diskio]]
+[[inputs.kernel]]
+[[inputs.mem]]
+[[inputs.processes]]
+[[inputs.swap]]
+[[inputs.system]]
+#[[inputs.net]]
+[[inputs.nstat]]
+[[inputs.netstat]]
+
+```
+
+
+
+_Generate configurations (Optional):_
+
+```
+telegraf config -input-filter cpu:mem:disk:swap:system:net:netstat -output-filter influxdb > telegraf-custom.conf
+
+or,
+
+telegraf config -input-filter cpu:mem:disk:swap:system:net:netstat -output-filter influxdb2 > telegraf-custom.conf
+```
+
+
+```
+cat telegraf-custom.conf
+```
+
+
+
+_Check Telegraf Configuration:_
+
+```
+telegraf --test
+
+telegraf --config /etc/telegraf/telegraf.conf --test
+
+telegraf --config-directory /etc/telegraf/telegraf.d --test
+
+telegraf --config /etc/telegraf/telegraf.conf --config-directory /etc/telegraf/telegraf.d --test
+```
+
+
+```
+telegraf --config /etc/telegraf/telegraf.conf --debug
+
+telegraf --config-directory /etc/telegraf/telegraf.d --debug
+
+telegraf --config /etc/telegraf/telegraf.conf --config-directory /etc/telegraf/telegraf.d --debug
+```
+
+
+
+
+
+
 
 
 
